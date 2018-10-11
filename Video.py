@@ -14,6 +14,11 @@ class Video:
 	def __init__(self, video_source=0):
 		'''Initializer da classe
 		'''
+
+		self.lower = {}
+		self.upper = {}
+
+		self.photo_counter = 0
 		self.vid = cv2.VideoCapture(video_source)
 
 		ap = argparse.ArgumentParser()
@@ -40,6 +45,18 @@ class Video:
 			self.vid.release()
 
 
+	def add_to_upper(self, color_name, hsv):
+		'''Adiciona uma nova cor ao filtro de cor mais alto
+		'''
+		self.upper[color_name] = hsv
+
+
+	def add_to_lower(self, color_name, hsv):
+		'''Adiciona uma nova cor ao filtro de cor mais baixo
+		'''
+		self.lower[color_name] = hsv
+
+
 	def get_frame(self):
 		'''Pega o video junto com o identificador de cores
 		'''
@@ -59,10 +76,7 @@ class Video:
 		'''Faz um circulo no frame que possui uma das cores abaixo,
 		e retorna o frame
 		'''
-		lower = {'red':(166, 84, 141), 'green':(25, 189, 118), 'blue':(97, 100, 117) } #  , 'yellow':(23, 59, 119), 'orange':(0, 50, 80)}
-		upper = {'red':(186,255,255), 'green':(95, 255,255), 'blue':(117,255,255) }     #  , 'yellow':(54,255,255), 'orange':(20,255,255)}
-
-
+		upper, lower = self.upper, self.lower
 
 		frame = imutils.resize(frame, width=600)
 		blurred = cv2.GaussianBlur(frame, (11, 11), 0)
@@ -90,30 +104,35 @@ class Video:
 
 					self.pts.appendleft(center)
 
-					for i in range(1, len(self.pts)):
-						if self.pts[i - 1] is None or self.pts[i] is None:
-							continue
+					# Caso queira uma linha seguindo o ponto descomente o código abaixo
+					# for i in range(1, len(self.pts)):
+					# 	if self.pts[i - 1] is None or self.pts[i] is None:
+					# 		continue
 
-						thickness = int(np.sqrt(self.args["buffer"] / float(i + 1)) * 2.5)
-						if str(key) == 'red':
-							cv2.line(frame, self.pts[i - 1], self.pts[i], (128, 0, 255), thickness)
-						else:
-							cv2.line(frame, self.pts[i - 1], self.pts[i], (0, 0, 255), thickness)
+					# 	thickness = int(np.sqrt(self.args["buffer"] / float(i + 1)) * 2.5)
+					# 	if str(key) == 'red':
+					# 		cv2.line(frame, self.pts[i - 1], self.pts[i], (128, 0, 255), thickness)
+					# 	else:
+					# 		cv2.line(frame, self.pts[i - 1], self.pts[i], (0, 0, 255), thickness)
 
 		return frame
 
 
 	def take_snapshot(self, path="test"):
-		'''Tira print da tela atual (somente do video)
+		'''Tira print da tela atual (somente do video) e salva
 		'''
 
 		try:
 			os.makedirs(str(path))
 		except OSError as e:
 			print(e)
-			# if e.errno != errno.EEXIST:
-			# 	raise
 
 		ret, frame = self	.get_frame()
 		if ret:
-			cv2.imwrite(path + "/frame-" + time.strftime("%d-%m-%Y-%H-%M-%S") + ".jpg", cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
+			self.photo_counter += 1
+
+			if self.photo_counter > 2:
+				self.photo_counter = 1
+
+			cv2.imwrite(path + "/frame-" + str(self.photo_counter) + ".jpg", cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
+

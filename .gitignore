@@ -1,3 +1,6 @@
 *.pyc
 *.pyo
 
+# Arquivos gerados para tomada de tempo
+tomada*
+frame*

@@ -18,6 +18,12 @@ class App:
 
 		self.vid = Video(video_source)
 
+		self.vid.add_to_lower('red', (166, 84, 141))
+		self.vid.add_to_upper('red', (186,255,255))
+
+		self.vid.add_to_lower('green', (25, 189, 118))
+		self.vid.add_to_upper('green', (95, 255, 255))
+
 		self.canvas = tkinter.Canvas(window, width = self.vid.width, height = self.vid.height)
 		self.canvas.pack()
 
@@ -34,6 +40,7 @@ class App:
 		self.update()
 		self.window.mainloop()
 
+
 	def _update(self):
 		'''Atualiza o valor do timer
 		'''
@@ -48,6 +55,7 @@ class App:
 			return
 
 		self._timer = self.window.after(1, self._update)
+
 
 	def _setTime(self, elap):
 		'''Exibe o valor do timer na label para um retorno visual do usuário

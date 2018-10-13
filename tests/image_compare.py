@@ -1,7 +1,7 @@
-from skimage.measure import compare_ssim
 import argparse
-import imutils
 import cv2
+import imutils
+from skimage.measure import compare_ssim
 
 '''Arquivo para testes de comparação de imagem, para utilizar
   python image_compare.py -f nome_da_primeira_foto -s nome_da_segunda_foto

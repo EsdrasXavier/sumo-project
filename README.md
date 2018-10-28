@@ -12,3 +12,7 @@ Para poder rodar o projeto deve-se possuir uma webcam, e instalado em sua máqui
 ## TODO
 Ainda há necessidade de implementar um metodo que verifica movimentação do robô e retorna caso tenha se movido.
 Melhorar um pouco a sintaxe do código está bem bagunçado
+
+**Desenvolvedores**
+- Esdras Xavier
+- Weiven Otto
